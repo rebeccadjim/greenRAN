@@ -1,0 +1,8 @@
+.alerts { width: 100%; border-collapse: collapse; margin-top: 16px; }
+th, td { text-align: left; padding: 8px 12px; border-bottom: 1px solid #ddd; }
+.resolved { opacity: 0.55; }
+.empty { margin-top: 16px; }
+.sev { padding: 2px 8px; border-radius: 10px; color: #fff; font-size: 0.8rem; }
+.sev.critical { background: #d32f2f; }
+.sev.warning { background: #ed6c02; }
+.sev.info { background: #1976d2; }

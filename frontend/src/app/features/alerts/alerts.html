@@ -1,0 +1,28 @@
+<h2>Alertes</h2>
+
+<mat-button-toggle-group [value]="filter()" (change)="filter.set($event.value)">
+  <mat-button-toggle value="active">Actives</mat-button-toggle>
+  <mat-button-toggle value="all">Historique</mat-button-toggle>
+</mat-button-toggle-group>
+
+@if (rows().length === 0) {
+  <p class="empty">Aucune alerte.</p>
+} @else {
+  <table class="alerts">
+    <thead>
+      <tr><th>Heure</th><th>Sévérité</th><th>Site</th><th>Type</th><th>Détail</th><th>État</th></tr>
+    </thead>
+    <tbody>
+      @for (a of rows(); track a.id) {
+        <tr [class.resolved]="!a.active">
+          <td>{{ a.ts | date: 'HH:mm:ss' }}</td>
+          <td><span class="sev" [class]="a.severity">{{ a.severity }}</span></td>
+          <td><a [routerLink]="['/site', a.siteId]">{{ siteName(a.siteId) }}</a></td>
+          <td>{{ typeLabel(a.type) }}</td>
+          <td>{{ a.message }}</td>
+          <td>{{ a.active ? 'En cours' : 'Résolue à ' + (a.endTs | date: 'HH:mm:ss') }}</td>
+        </tr>
+      }
+    </tbody>
+  </table>
+}
