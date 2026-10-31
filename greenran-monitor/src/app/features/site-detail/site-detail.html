@@ -1,0 +1,17 @@
+@if (site(); as s) {
+  <a mat-button routerLink="/">← Retour</a>
+  <h2>{{ s.name }} <small>({{ s.cells }} cellules)</small></h2>
+
+  @if (last(); as m) {
+    <p>
+      Charge : <b>{{ m.loadPct.toFixed(0) }} %</b> ·
+      Conso : <b>{{ m.energyKwh.toFixed(1) }} kWh</b> ·
+      Température : <b>{{ m.tempC.toFixed(0) }} °C</b> ·
+      Latence : <b>{{ m.qos.latencyMs.toFixed(0) }} ms</b>
+    </p>
+  }
+
+  <div echarts [options]="chart()" class="chart"></div>
+} @else {
+  <p>Site introuvable.</p>
+}
