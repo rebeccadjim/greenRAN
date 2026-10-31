@@ -1,2 +1,11 @@
-<h1>Budget Kanban</h1>
-<router-outlet />
+<mat-toolbar color="primary">
+  <span>GreenRAN Monitor</span>
+  <span class="spacer"></span>
+  <a mat-button routerLink="/">Dashboard</a>
+  <a mat-button routerLink="/alerts"
+     [matBadge]="alerts.activeCount()" [matBadgeHidden]="alerts.activeCount() === 0"
+     matBadgeColor="warn">Alertes</a>
+</mat-toolbar>
+<main class="content">
+  <router-outlet />
+</main>
