@@ -1,9 +1,0 @@
-<section class="kpis">
-  <app-kpi-card label="Consommation instantanée" [value]="store.totalKwh().toFixed(1)" unit="kWh" />
-  <app-kpi-card label="Charge moyenne" [value]="store.avgLoadPct().toFixed(0)" unit="%" />
-  <app-kpi-card label="Sites en surcharge" [value]="overloaded().toString()"
-                [status]="overloaded() > 0 ? 'crit' : 'ok'" />
-  <app-kpi-card label="CO₂ estimé" [value]="co2Kg().toFixed(2)" unit="kg" />
-</section>
-
-<app-site-map />
