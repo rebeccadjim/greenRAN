@@ -1,6 +1,24 @@
 @if (site(); as s) {
   <a mat-button routerLink="/">← Retour</a>
   <h2>{{ s.name }} <small>({{ s.cells }} cellules)</small></h2>
+  <h3>Prévision de charge sur 24 h</h3>
+  <div echarts [options]="forecastChart()" class="chart"></div>
+
+  @if (rec(); as r) {
+    @if (r.windows.length === 0) {
+      <p>Aucune mise en veille recommandée pour ce site avec le seuil actuel.</p>
+    } @else {
+      <h3>Mise en veille recommandée</h3>
+      <ul>
+        @for (w of r.windows; track w.startHour) {
+          <li>
+            {{ w.startHour }}h → {{ w.endHour }}h : éteindre <b>{{ w.cellsOff }}</b> cellule(s) sur {{ s.cells }},
+            économie {{ w.savedKwh.toFixed(1) }} kWh (risque QoS : {{ w.risk }})
+          </li>
+        }
+      </ul>
+    }
+  }
 
   @if (last(); as m) {
     <p>

@@ -1,1 +1,44 @@
-<p>recommendations works!</p>
+<h2>Recommandations de mise en veille</h2>
+<p>
+  Créneaux où la charge prévue passe sous le seuil : des cellules peuvent être éteintes
+  sans saturer celles qui restent.
+</p>
+
+<label class="threshold">
+  Seuil de charge creuse : <b>{{ forecast.threshold() }} %</b>
+  <input type="range" min="10" max="40" step="1"
+         [value]="forecast.threshold()" (input)="onThreshold($event)" />
+</label>
+
+<section class="kpis">
+  <app-kpi-card label="Énergie économisée / nuit" [value]="forecast.totals().kwh.toFixed(1)" unit="kWh" />
+  <app-kpi-card label="Économie financière" [value]="forecast.totals().eur.toFixed(2)" unit="€" />
+  <app-kpi-card label="CO₂ évité" [value]="forecast.totals().co2.toFixed(2)" unit="kg" />
+</section>
+
+@if (rows().length === 0) {
+  <p>Aucun créneau proposé avec ce seuil.</p>
+} @else {
+  <table class="reco">
+    <thead>
+      <tr>
+        <th>Site</th><th>Créneau</th><th>Charge prévue (max)</th>
+        <th>Cellules à éteindre</th><th>Charge sur les restantes</th>
+        <th>Économie</th><th>Risque QoS</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (r of rows(); track r.site.id + r.w.startHour) {
+        <tr>
+          <td><a [routerLink]="['/site', r.site.id]">{{ r.site.name }}</a></td>
+          <td>{{ slot(r.w) }}</td>
+          <td>{{ r.w.peakLoad.toFixed(0) }} %</td>
+          <td>{{ r.w.cellsOff }} / {{ r.site.cells }}</td>
+          <td>{{ r.w.resultingLoad.toFixed(0) }} %</td>
+          <td>{{ r.w.savedKwh.toFixed(1) }} kWh</td>
+          <td><span class="risk" [class]="r.w.risk">{{ riskLabel(r.w.risk) }}</span></td>
+        </tr>
+      }
+    </tbody>
+  </table>
+}
