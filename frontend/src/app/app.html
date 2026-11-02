@@ -5,6 +5,7 @@
   <a mat-button routerLink="/alerts"
      [matBadge]="alerts.activeCount()" [matBadgeHidden]="alerts.activeCount() === 0"
      matBadgeColor="warn">Alertes</a>
+  <a mat-button routerLink="/recommendations">Recommandations</a>
 </mat-toolbar>
 <main class="content">
   <router-outlet />

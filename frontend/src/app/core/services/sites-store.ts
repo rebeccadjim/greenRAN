@@ -41,4 +41,7 @@ export class SitesStore {
   siteById(id: string) {
     return this.sites.find((s) => s.id === id);
   }
+  expectedLoad(site: Site, hour: number) {
+    return this.rt.expectedLoad(site, hour);
+  }
 }

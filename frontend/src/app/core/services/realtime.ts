@@ -86,4 +86,8 @@ export class RealtimeService {
   private clamp(v: number, min: number, max: number): number {
     return Math.min(max, Math.max(min, v));
   }
+  /** Charge attendue (%) d'un site à une heure donnée : sert de prévision en attendant le backend (#24). */
+  expectedLoad(site: Site, hour: number): number {
+    return this.clamp(this.baseLoad(hour) * this.siteFactor(site), 2, 100);
+  }
 }
