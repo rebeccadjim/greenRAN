@@ -8,6 +8,7 @@ public record SiteView(
         double lat,
         double lon,
         String technology,
+        int cells,
         String status,
         LatestKpi latest
 ) {

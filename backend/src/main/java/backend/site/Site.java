@@ -15,6 +15,7 @@ public class Site {
     private double lon;
     private String technology;
     private String status;
+    private int cells;
 
     protected Site() { }  // requis par JPA
 

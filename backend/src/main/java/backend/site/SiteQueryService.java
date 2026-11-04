@@ -39,7 +39,7 @@ public class SiteQueryService {
     // Tous les sites avec leur dernière mesure
     public List<SiteView> findAllWithLatest() {
         String sql = """
-                SELECT s.id, s.name, s.lat, s.lon, s.technology, s.status,
+                SELECT s.id, s.name, s.lat, s.lon, s.technology, s.cells, s.status,
                        m.time AS m_time, m.traffic_mbps, m.prb_load_pct, m.energy_kwh, m.temperature_c
                 FROM site s
                 LEFT JOIN LATERAL (
@@ -64,6 +64,7 @@ public class SiteQueryService {
                     rs.getDouble("lat"),
                     rs.getDouble("lon"),
                     rs.getString("technology"),
+                    rs.getInt("cells"),
                     rs.getString("status"),
                     latest);
         });
