@@ -11,5 +11,5 @@ export interface Measure {
   loadPct: number;
   energyKwh: number;
   tempC: number;
-  qos: Qos;
+  qos?: Qos;
 }

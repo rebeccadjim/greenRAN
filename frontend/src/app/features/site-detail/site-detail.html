@@ -25,7 +25,11 @@
       Charge : <b>{{ m.loadPct.toFixed(0) }} %</b> ·
       Conso : <b>{{ m.energyKwh.toFixed(1) }} kWh</b> ·
       Température : <b>{{ m.tempC.toFixed(0) }} °C</b> ·
-      Latence : <b>{{ m.qos.latencyMs.toFixed(0) }} ms</b>
+      @if (m.qos; as qos) {
+        Latence : <b>{{ qos.latencyMs.toFixed(0) }} ms</b>
+      } @else {
+        Latence : <b>non disponible</b>
+      }
     </p>
   }
 

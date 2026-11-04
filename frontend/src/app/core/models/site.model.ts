@@ -4,4 +4,6 @@ export interface Site {
   lat: number;
   lng: number;
   cells: number;
+  technology?: '4G' | '5G';
+  status?: 'ACTIVE' | 'SLEEP';
 }

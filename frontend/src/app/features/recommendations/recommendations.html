@@ -33,7 +33,7 @@
           <td><a [routerLink]="['/site', r.site.id]">{{ r.site.name }}</a></td>
           <td>{{ slot(r.w) }}</td>
           <td>{{ r.w.peakLoad.toFixed(0) }} %</td>
-          <td>{{ r.w.cellsOff }} / {{ r.site.cells }}</td>
+          <td>{{ r.w.cellsOff }} / {{ r.totalCells }}</td>
           <td>{{ r.w.resultingLoad.toFixed(0) }} %</td>
           <td>{{ r.w.savedKwh.toFixed(1) }} kWh</td>
           <td><span class="risk" [class]="r.w.risk">{{ riskLabel(r.w.risk) }}</span></td>

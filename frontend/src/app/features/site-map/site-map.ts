@@ -1,7 +1,8 @@
-import { Component, ElementRef, OnDestroy, AfterViewInit, effect, inject, viewChild } from '@angular/core';
-import { Router } from '@angular/router';                      // NEW
+import { Component, ElementRef, OnDestroy, AfterViewInit, effect, signal, inject, viewChild } from '@angular/core';
+import { Router } from '@angular/router';                   
 import * as L from 'leaflet';
 import { SitesStore } from '../../core/services/sites-store';
+import { Site } from '../../core/models/site.model';
 
 @Component({
   selector: 'app-site-map',
@@ -10,12 +11,21 @@ import { SitesStore } from '../../core/services/sites-store';
 })
 export class SiteMap implements AfterViewInit, OnDestroy {
   private store = inject(SitesStore);
-  private router = inject(Router);                             // NEW
+  private router = inject(Router);                            
   private mapEl = viewChild.required<ElementRef<HTMLDivElement>>('mapEl');
   private map?: L.Map;
   private markers = new Map<string, L.CircleMarker>();
+  private readonly mapReady = signal(false);
 
   constructor() {
+    // 1. Création et suppression des marqueurs quand la liste de sites change
+    effect(() => {
+      const sites = this.store.sites();
+      if (!this.mapReady()) return;
+      this.syncMarkers(sites);
+    });
+
+    // 2. Ton effet existant : couleur et tooltip selon la dernière mesure
     effect(() => {
       const latest = this.store.latest();
       for (const [id, m] of Object.entries(latest)) {
@@ -35,15 +45,31 @@ export class SiteMap implements AfterViewInit, OnDestroy {
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       attribution: '&copy; OpenStreetMap',
     }).addTo(this.map);
+    this.mapReady.set(true);
+  }
+  private syncMarkers(sites: Site[]) {
+    const ids = new Set(sites.map((s) => s.id));
+    const map = this.map;
+    if (!map) return;
 
-    for (const s of this.store.sites) {
+    // retire les marqueurs des sites qui n'existent plus (bascule API <-> simulation)
+    for (const [id, marker] of this.markers) {
+      if (!ids.has(id)) {
+        marker.remove();
+        this.markers.delete(id);
+      }
+    }
+
+    // crée les marqueurs manquants
+    for (const s of sites) {
+      if (this.markers.has(s.id)) continue;
       const marker = L.circleMarker([s.lat, s.lng], {
         radius: 10 + s.cells,
         fillOpacity: 0.6,
         color: '#2e7d32',
-      }).addTo(this.map);
+      }).addTo(map);
       marker.bindTooltip(s.name);
-      marker.on('click', () => this.router.navigate(['/site', s.id]));   // NEW
+      marker.on('click', () => this.router.navigate(['/site', s.id]));
       this.markers.set(s.id, marker);
     }
   }
@@ -53,7 +79,7 @@ export class SiteMap implements AfterViewInit, OnDestroy {
   }
 
   private nameOf(id: string) {
-    return this.store.sites.find((s) => s.id === id)?.name ?? id;
+    return this.store.siteById(id)?.name ?? id;
   }
 
   private colorFor(load: number) {

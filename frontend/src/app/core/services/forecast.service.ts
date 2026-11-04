@@ -32,7 +32,7 @@ export class ForecastService {
   }
 
   readonly recommendations = computed(() =>
-    this.store.sites.map((s) => this.recommendationFor(s))
+    this.store.sites().map((s) => this.recommendationFor(s))
   );
 
   readonly totals = computed(() => {

@@ -53,6 +53,7 @@ export class AlertsService {
   /** Règles simples : à remplacer par le moteur ML du backend (issue #23). */
   private detect(site: Site, m: Measure): Detection[] {
     const out: Detection[] = [];
+    const qos = m.qos ?? { latencyMs: 0, dropRatePct: 0, throughputMbps: 0 };
 
     // Surconsommation : consommation mesurée vs consommation attendue pour cette charge
     const expected = site.cells * (0.45 + 0.9 * (m.loadPct / 100));
@@ -66,11 +67,11 @@ export class AlertsService {
     }
 
     // Site défaillant : taux de coupure anormal
-    if (m.qos.dropRatePct > 5) {
+    if (qos.dropRatePct > 5) {
       out.push({
         type: 'failure',
         severity: 'critical',
-        message: `Taux de coupure ${m.qos.dropRatePct.toFixed(1)} %, débit ${m.qos.throughputMbps.toFixed(0)} Mbps`,
+        message: `Taux de coupure ${qos.dropRatePct.toFixed(1)} %, débit ${qos.throughputMbps.toFixed(0)} Mbps`,
       });
     }
 

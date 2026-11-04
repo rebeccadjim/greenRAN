@@ -14,9 +14,10 @@ export class Recommendations {
   forecast = inject(ForecastService);
 
   rows = computed(() =>
-    this.forecast.recommendations().flatMap((r) => r.windows.map((w) => ({ site: r.site, w })))
+    this.forecast.recommendations().flatMap((r) =>
+      r.windows.map((w) => ({ site: r.site, w, totalCells: r.site.cells }))
+    )
   );
-
   onThreshold(e: Event) {
     this.forecast.threshold.set(+(e.target as HTMLInputElement).value);
   }
